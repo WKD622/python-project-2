@@ -1,5 +1,5 @@
 import json
-import src.common as c
+import src.common as cm
 from json import JSONDecodeError
 from pprint import pprint
 
@@ -21,9 +21,9 @@ class JsonOperations:
             file = open(path)
             self.data = json.load(file)
         except (FileNotFoundError, IsADirectoryError):
-            c.handle_error("Path to json is not correct.")
+            cm.handle_error("Path to json is not correct.")
         except (JSONDecodeError):
-            c.handle_error("There are some wrong `types` in json.")
+            cm.handle_error("There are some wrong `types` in json.")
         file.close()
 
     def print_(self):

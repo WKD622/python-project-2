@@ -1,6 +1,6 @@
 import re
 
-DEC_COLOUR_REGEX = '\((\d+),(\d+),(\d+)\)'
+DEC_COLOUR_REGEX = '\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*'
 HEX_COLOUR_REGEX = '#[a-z\d]{6}'
 
 
@@ -28,7 +28,7 @@ def is_hex(colour):
     :param colour:
     :return:
     """
-    return bool(re.match(HEX_COLOUR_REGEX, colour))
+    return bool(re.match(HEX_COLOUR_REGEX, colour)) and len(colour) == 7
 
 
 def is_dec(colour):

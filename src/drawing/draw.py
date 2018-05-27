@@ -22,7 +22,7 @@ class Draw:
         size = size / 2
         self.ax.fill([x - size, x + size, x + size, x - size],
                      [y + size, y + size, y - size, y - size],
-                     colour)
+                     color=colour)
         print("Square created succesfully.")
 
     def rectangle(self, x, y, width, height, colour):
