@@ -23,6 +23,8 @@ RADIUS = "radius"
 SIZE = "size"
 COLOR = "color"
 POINTS = "points"
+BASIC_COLOURS = ["red", "white", "blue", "black", "yellow", "green", "brown", "purple", "orange", "gray"]
+FILE_NAME = None
 
 
 def handle_error(message):

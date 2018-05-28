@@ -19,6 +19,17 @@ def prepare_for_checking(json_, figures):
         cm.handle_error("Figures list is empty. Nothing to draw. :-(")
 
 
+def check_if_screen_correct(screen):
+    """
+    Checks if whole screen is correct written in json.
+    :param screen:
+    :return:
+    """
+    if screen is not None:
+        check_if_colour_correct(screen.get(cm.FG_COLOUR))
+        check_if_colour_correct(screen.get(cm.BG_COLOUR))
+
+
 def check_if_colour_correct(colour):
     """
     Checks if colour is correct (even if it is from palette).
@@ -38,9 +49,10 @@ def check_if_colour_correct(colour):
                     else:
                         cm.handle_error("Color {}: {} in palette has incorrect value.".format(colour, value))
                 else:
-                    cm.handle_error("There is no `{}` colour in palette.".format(colour))
-            else:
-                cm.handle_error("There is no palette.")
+                    if colour not in cm.BASIC_COLOURS:
+                        cm.handle_error("Colour `{}` is incorrect. Add it to palette or correct it.".format(colour))
+            elif colour not in cm.BASIC_COLOURS:
+                cm.handle_error("Colour `{}` is incorrect. Add it to palette or correct it.".format(colour))
     return True
 
 
@@ -100,9 +112,10 @@ def check_if_point_correct(point):
     :param point:
     :return:
     """
+    check_if_colour_correct(point.get(cm.COLOR))
     check_if_fields_exists(point, [cm.X, cm.Y])
-    if check_if_int(point.get(cm.X), "Incorrect field x of figure point.") and \
-            check_if_int(point.get(cm.Y), "Incorrect field x of figure point."):
+    if check_if_int(point.get(cm.X), "Incorrect field x of figure point. Type may be wrong.") and \
+            check_if_int(point.get(cm.Y), "Incorrect field x of figure point. Type may be wrong."):
         return True
 
 
@@ -129,10 +142,10 @@ def check_if_rectangle_correct(rectangle):
     :return:
     """
     check_if_fields_exists(rectangle, [cm.X, cm.Y, cm.WIDTH, cm.HEIGHT])
-    if check_if_int(rectangle.get(cm.X), "Incorrect field x of figure rectangle.") and \
-            check_if_int(rectangle.get(cm.Y), "Incorrect field y of figure rectangle.") and \
-            check_if_int(rectangle.get(cm.WIDTH), "Incorrect field width of figure rectangle") and \
-            check_if_int(rectangle.get(cm.HEIGHT), "Incorrect field height of figure rectangle") and \
+    if check_if_int(rectangle.get(cm.X), "Incorrect field x of figure rectangle. Type may be wrong.") and \
+            check_if_int(rectangle.get(cm.Y), "Incorrect field y of figure rectangle. Type may be wrong.") and \
+            check_if_int(rectangle.get(cm.WIDTH), "Incorrect field width of figure rectangle. Type may be wrong.") and \
+            check_if_int(rectangle.get(cm.HEIGHT), "Incorrect field height of figure rectangle. Type may be wrong.") and \
             check_if_colour_correct(rectangle.get(cm.COLOR)):
         return True
 
@@ -144,9 +157,9 @@ def check_if_square_correct(square):
     :return:
     """
     check_if_fields_exists(square, [cm.X, cm.Y, cm.SIZE])
-    if check_if_int(square.get(cm.X), "Incorrect field x of figure square.") and \
-            check_if_int(square.get(cm.Y), "Incorrect field y of figure square.") and \
-            check_if_int(square.get(cm.SIZE), "Incorrect field size of figure square.") and \
+    if check_if_int(square.get(cm.X), "Incorrect field x of figure square. Type may be wrong.") and \
+            check_if_int(square.get(cm.Y), "Incorrect field y of figure square. Type may be wrong.") and \
+            check_if_int(square.get(cm.SIZE), "Incorrect field size of figure square. Type may be wrong.") and \
             check_if_colour_correct(square.get(cm.COLOR)):
         return True
 
@@ -158,9 +171,9 @@ def check_if_circle_correct(circle):
     :return:
     """
     check_if_fields_exists(circle, [cm.X, cm.Y, cm.RADIUS])
-    if check_if_int(circle.get(cm.X), "Incorrect field x of figure circle.") and \
-            check_if_int(circle.get(cm.Y), "Incorrect field y of figure circle.") and \
-            check_if_int(circle.get(cm.RADIUS), "Incorrect field radius of figure circle.") and \
+    if check_if_int(circle.get(cm.X), "Incorrect field x of figure circle. Type may be wrong.") and \
+            check_if_int(circle.get(cm.Y), "Incorrect field y of figure circle. Type may be wrong.") and \
+            check_if_int(circle.get(cm.RADIUS), "Incorrect field radius of figure circle. Type may be wrong.") and \
             check_if_colour_correct(circle.get(cm.COLOR)):
         return True
 
@@ -183,7 +196,7 @@ def check_if_figure_correct(figure):
     elif figure_type == cm.CIRCLE:
         check_if_circle_correct(figure)
     else:
-        cm.handle_error("{} figure name is incorrect.".format(figure_type))
+        cm.handle_error("`{}` figure name is incorrect.".format(figure_type))
 
 
 def check_if_figures_correct(json):
@@ -196,3 +209,14 @@ def check_if_figures_correct(json):
     prepare_for_checking(json, figures)
     for figure in figures:
         check_if_figure_correct(figure)
+
+
+def check_json(json):
+    """
+    Main in is_correct module.
+    :param json:
+    :return:
+    """
+    check_if_figures_correct(json)
+    check_if_screen_correct(json.get(cm.SCREEN))
+    print("Check ends successfully. Json is correct.")

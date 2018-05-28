@@ -22,8 +22,9 @@ class JsonOperations:
             self.data = json.load(file)
         except (FileNotFoundError, IsADirectoryError):
             cm.handle_error("Path to json is not correct.")
-        except (JSONDecodeError):
-            cm.handle_error("There are some wrong `types` in json.")
+        except JSONDecodeError:
+            cm.handle_error("There are some wrong `types` in json or it is wrong constructed (unnecessary characters,"
+                            " unclosed bracket.")
         file.close()
 
     def print_(self):
